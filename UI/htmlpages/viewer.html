@@ -433,9 +433,17 @@
       "united states": "united states of america", "uk": "united kingdom",
       "russia": "russia", "drc": "democratic republic of the congo",
       "tanzania": "united republic of tanzania", "south korea": "south korea",
-      "vietnam": "vietnam", "ivory coast": "ivory coast", "cote d'ivoire": "ivory coast"
+      "vietnam": "vietnam", "viet nam": "vietnam",
+      "türkiye": "turkey", "turkiye": "turkey", "turkey": "turkey",
+      "ivory coast": "ivory coast", "cote d'ivoire": "ivory coast"
     };
-    const normCountry = c => { const k = String(c).trim().toLowerCase(); return COUNTRY_ALIASES[k] || k; };
+    const normCountry = c => {
+      const k = String(c || "").trim().toLowerCase();
+      const clean = k.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      if (k === "viet nam" || clean === "viet nam") return "vietnam";
+      if (k === "türkiye" || clean === "turkiye" || clean === "turkey") return "turkey";
+      return COUNTRY_ALIASES[k] || COUNTRY_ALIASES[clean] || k;
+    };
     const mapSvg = document.getElementById("map");
     const mapSection = document.getElementById("map-section");
     let worldData = null;
