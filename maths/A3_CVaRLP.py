@@ -12,7 +12,7 @@ def prefilter(df, n_keep=400):
 # Algorithm three - cheapest portfolio whose worst-alpha average delivery still hits target
 
 
-def cvar_portfolio(cands, d, target=100_000, budget=1_000_000, alpha=0.05):
+def cvar_portfolio(cands, d, target=105_000, budget=1_000_000, alpha=0.05):
     n, N = d.shape
     price = cands["price_usd_per_t"].to_numpy()
     avail = cands["available_tonnes"].to_numpy()
