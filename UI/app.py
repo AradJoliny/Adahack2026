@@ -1,5 +1,6 @@
 import csv
 import io
+import json
 import os
 
 from flask import Flask, render_template, request, send_from_directory
@@ -7,6 +8,7 @@ from flask import Flask, render_template, request, send_from_directory
 app = Flask(__name__, template_folder="htmlpages")
 
 RISK_LEVELS = {1: "Very Low", 2: "Low", 3: "Medium", 4: "High", 5: "Very High"}
+LEVEL_KEY_MAP = {1: "very_low", 2: "low", 3: "medium", 4: "high", 5: "very_high"}
 
 SAMPLE_CSV = os.path.join(os.path.dirname(__file__), "data", "sample_portfolio.csv")
 
@@ -53,8 +55,15 @@ def parse_investments(csv_text):
   return rows
 
 
-def load_investments():
-  """Source of the chosen-investments CSV. Currently a sample file."""
+def load_investments(level=3):
+  """Source of the chosen-investments CSV. Loads optimised portfolio if available."""
+  key = LEVEL_KEY_MAP.get(level, "medium")
+  optimised_csv = os.path.join(
+      os.path.dirname(__file__), "carbon-portfolio-viewer", "sample_data", f"portfolio_{key}.csv"
+  )
+  if os.path.exists(optimised_csv):
+    with open(optimised_csv, newline="", encoding="utf-8") as f:
+      return parse_investments(f.read())
   with open(SAMPLE_CSV, newline="", encoding="utf-8") as f:
     return parse_investments(f.read())
 
@@ -82,11 +91,25 @@ def viewer():
   level = request.args.get("risk", 3, type=int)
   if level not in RISK_LEVELS:
     level = 3
+  metrics = None
+  key = LEVEL_KEY_MAP.get(level, "medium")
+  metrics_file = os.path.join(
+      os.path.dirname(__file__), "carbon-portfolio-viewer", "sample_data", "portfolios.json"
+  )
+  if os.path.exists(metrics_file):
+    try:
+      with open(metrics_file, encoding="utf-8") as f:
+        data = json.load(f)
+        if key in data and "metrics" in data[key]:
+          metrics = data[key]["metrics"]
+    except Exception:
+      pass
   return render_template(
       "viewer.html",
       risk_level=level,
       risk_name=RISK_LEVELS[level],
-      investments=load_investments(),
+      risk_metrics=metrics,
+      investments=load_investments(level),
   )
 
 

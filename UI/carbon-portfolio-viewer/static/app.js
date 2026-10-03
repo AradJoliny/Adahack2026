@@ -23,6 +23,14 @@ const COLUMNS = [
 
 const state = { data: null, metric: "carbon", regionSub: "carbon", sort: { key: "tonnes_chosen", dir: -1 }, chart: null };
 
+const RISK_SLIDER_MAP = {
+  1: { id: "very_low", name: "Very Low Risk", label: "Very Low" },
+  2: { id: "low", name: "Low Risk", label: "Low" },
+  3: { id: "medium", name: "Medium Risk", label: "Medium" },
+  4: { id: "high", name: "High Risk", label: "High" },
+  5: { id: "very_high", name: "Very High Risk", label: "Very High" },
+};
+
 /* ---------- API ---------- */
 async function post(body) {
   const res = await fetch("/api/portfolio", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -30,10 +38,19 @@ async function post(body) {
   if (!res.ok) throw new Error(json.error || res.statusText);
   return json;
 }
-async function loadSample() {
-  const res = await fetch("/api/sample");
-  if (!res.ok) throw new Error("Could not load sample data");
+async function loadOptimised(risk = "medium") {
+  const res = await fetch(`/api/optimised?risk=${encodeURIComponent(risk)}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Could not load optimised portfolio for '${risk}'`);
+  }
   return res.json();
+}
+async function loadSample() {
+  const slider = $("risk-slider");
+  const step = slider ? slider.value : 3;
+  const riskKey = RISK_SLIDER_MAP[step]?.id || "medium";
+  return loadOptimised(riskKey);
 }
 async function run(promiseFn) {
   hideAlert();
@@ -56,14 +73,39 @@ function setData(data) {
 
 function renderStats() {
   const s = state.data.summary;
+  const m = state.data.risk_metrics;
   const items = [
     ["Projects", fmt(s.project_count), `${s.region_count} regions`],
     ["Carbon saved", fmt(s.total_tonnes), "tonnes CO₂e chosen"],
     ["Total spend", money(s.total_spend), "tonnes × price per tonne"],
     ["Avg price", money(s.weighted_avg_price, 2), "per tonne, weighted"],
   ];
+  if (m) {
+    const pShortfallPct = (m.p_shortfall * 100).toFixed(1);
+    items.push([
+      "Shortfall risk",
+      `${pShortfallPct}%`,
+      `${pShortfallPct}% chance of shortfall (<100k)`,
+    ]);
+    if (m.worst_alpha_avg != null) {
+      items.push([
+        "Worst-5% delivery",
+        `${fmt(m.worst_alpha_avg)} t`,
+        "tail scenario average",
+      ]);
+    }
+  }
   $("stats").innerHTML = items.map(([l, v, sub], i) =>
     `<div class="card stat" style="animation-delay:${i * 70}ms"><div class="label">${l}</div><div class="value">${v}</div><div class="sub">${sub}</div></div>`).join("");
+
+  if ($("risk-badge-metric")) {
+    if (m && m.p_shortfall != null) {
+      $("risk-badge-metric").textContent = `${(m.p_shortfall * 100).toFixed(1)}% chance of shortfall`;
+      $("risk-badge-metric").style.display = "";
+    } else {
+      $("risk-badge-metric").style.display = "none";
+    }
+  }
 }
 
 function renderMapping() {
@@ -211,3 +253,57 @@ $("link-sample").addEventListener("click", (e) => { e.preventDefault(); run(load
 $("btn-api-doc").addEventListener("click", (e) => {
   const p = $("api-panel"); p.hidden = !p.hidden; e.currentTarget.setAttribute("aria-expanded", String(!p.hidden));
 });
+
+/* ---------- risk slider ---------- */
+function setupRiskSlider() {
+  const slider = $("risk-slider");
+  if (!slider) return;
+
+  function updateRiskUI(step) {
+    const cfg = RISK_SLIDER_MAP[step] || RISK_SLIDER_MAP[3];
+    if ($("risk-level-name")) $("risk-level-name").textContent = cfg.name;
+    document.querySelectorAll(".step-label").forEach((el) => {
+      el.classList.toggle("active", el.dataset.step === String(step));
+    });
+  }
+
+  slider.addEventListener("input", (e) => {
+    updateRiskUI(e.target.value);
+  });
+
+  slider.addEventListener("change", (e) => {
+    const step = e.target.value;
+    const cfg = RISK_SLIDER_MAP[step] || RISK_SLIDER_MAP[3];
+    updateRiskUI(step);
+    run(() => loadOptimised(cfg.id));
+  });
+
+  document.querySelectorAll(".step-label").forEach((lbl) => {
+    lbl.addEventListener("click", () => {
+      const step = lbl.dataset.step;
+      slider.value = step;
+      updateRiskUI(step);
+      const cfg = RISK_SLIDER_MAP[step] || RISK_SLIDER_MAP[3];
+      run(() => loadOptimised(cfg.id));
+    });
+  });
+
+  // Check URL query param e.g. ?risk=medium or ?risk=3 or session storage
+  const urlParams = new URLSearchParams(window.location.search);
+  let initialRisk = urlParams.get("risk") || sessionStorage.getItem("riskLevel");
+  let activeStep = 3;
+  if (initialRisk) {
+    initialRisk = String(initialRisk).toLowerCase();
+    for (const [s, cfg] of Object.entries(RISK_SLIDER_MAP)) {
+      if (cfg.id === initialRisk || String(s) === initialRisk) {
+        activeStep = Number(s);
+        break;
+      }
+    }
+  }
+  slider.value = activeStep;
+  updateRiskUI(activeStep);
+  run(() => loadOptimised(RISK_SLIDER_MAP[activeStep].id));
+}
+
+setupRiskSlider();

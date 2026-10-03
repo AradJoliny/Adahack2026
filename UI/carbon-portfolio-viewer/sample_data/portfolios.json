@@ -1,0 +1,134 @@
+{
+  "very_low": {
+    "alpha": 0.01,
+    "metrics": {
+      "cost": 178263.86613424477,
+      "projects": 41.0,
+      "mean_delivered": 129044.21352497247,
+      "p_shortfall": 0.0068,
+      "worst_alpha_avg": 105982.29224268379
+    },
+    "by_type": {
+      "Hydropower": 39010.0,
+      "RE Bundled": 6762.0,
+      "Solar - Centralized": 25133.0,
+      "Solar - centralized": 3530.0,
+      "Solar Water Heaters": 2854.0,
+      "Wind": 66036.0
+    },
+    "by_country": {
+      "Brazil": 3187.0,
+      "China": 48384.0,
+      "India": 33158.0,
+      "Indonesia": 520.0,
+      "New Caledonia": 1240.0,
+      "Taiwan": 13663.0,
+      "Thailand": 1878.0,
+      "T\u00fcrkiye": 35953.0,
+      "Uruguay": 1071.0,
+      "Viet Nam": 4272.0
+    }
+  },
+  "low": {
+    "alpha": 0.025,
+    "metrics": {
+      "cost": 172851.0100071323,
+      "projects": 33.0,
+      "mean_delivered": 128498.12861229325,
+      "p_shortfall": 0.009,
+      "worst_alpha_avg": 103565.50789474363
+    },
+    "by_type": {
+      "Hydropower": 41080.0,
+      "RE Bundled": 8281.0,
+      "Solar - Centralized": 26969.0,
+      "Solar Water Heaters": 572.0,
+      "Wind": 66484.0
+    },
+    "by_country": {
+      "Brazil": 3840.0,
+      "China": 47244.0,
+      "India": 30731.0,
+      "Indonesia": 1487.0,
+      "New Caledonia": 1787.0,
+      "Taiwan": 11610.0,
+      "Thailand": 2019.0,
+      "T\u00fcrkiye": 38745.0,
+      "Uruguay": 2414.0,
+      "Viet Nam": 3507.0
+    }
+  },
+  "medium": {
+    "alpha": 0.05,
+    "metrics": {
+      "cost": 167597.81284869148,
+      "projects": 31.0,
+      "mean_delivered": 127130.03330719983,
+      "p_shortfall": 0.0176,
+      "worst_alpha_avg": 100425.94537720158
+    },
+    "by_type": {
+      "Hydropower": 39537.0,
+      "RE Bundled": 8158.0,
+      "Solar - Centralized": 26772.0,
+      "Wind": 67748.0
+    },
+    "by_country": {
+      "Brazil": 4061.0,
+      "China": 49738.0,
+      "India": 26408.0,
+      "Indonesia": 119.0,
+      "New Caledonia": 2235.0,
+      "Taiwan": 10885.0,
+      "Thailand": 1864.0,
+      "T\u00fcrkiye": 40594.0,
+      "Uruguay": 1818.0,
+      "Viet Nam": 4492.0
+    }
+  },
+  "high": {
+    "alpha": 0.1,
+    "metrics": {
+      "cost": 161100.07958766393,
+      "projects": 24.0,
+      "mean_delivered": 124849.26379428558,
+      "p_shortfall": 0.0328,
+      "worst_alpha_avg": 96058.39135934637
+    },
+    "by_type": {
+      "Hydropower": 40755.0,
+      "RE Bundled": 7630.0,
+      "Solar - Centralized": 27248.0,
+      "Wind": 64781.0
+    },
+    "by_country": {
+      "Brazil": 3624.0,
+      "China": 50166.0,
+      "India": 28182.0,
+      "Indonesia": 600.0,
+      "New Caledonia": 2115.0,
+      "Taiwan": 10699.0,
+      "T\u00fcrkiye": 37792.0,
+      "Uruguay": 281.0,
+      "Viet Nam": 6954.0
+    }
+  },
+  "very_high": {
+    "alpha": 1.0,
+    "metrics": {
+      "cost": 118379.3622315618,
+      "projects": 2.0,
+      "mean_delivered": 102845.11053711605,
+      "p_shortfall": 0.1486,
+      "worst_alpha_avg": 29.72680309210852
+    },
+    "by_type": {
+      "Hydropower": 120717.0,
+      "Solar - Centralized": 83.0
+    },
+    "by_country": {
+      "India": 120717.0,
+      "Viet Nam": 83.0
+    }
+  }
+}

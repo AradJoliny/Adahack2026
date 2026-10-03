@@ -1,0 +1,34 @@
+credit_id,project_name,country,region,project_type,risk,price_per_tonne,tonnes_chosen,total_spend
+VCS173,Vishnuprayag Hydro-electric Project (VHEP) by Jaiprakash Power Ventures Ltd.(JPVL),India,Southern Asia,Hydropower,,0.98,6115.82,5993.5
+VCS1974,Srepok 1 Solar Power Project,Viet Nam,South-Eastern Asia,Solar - Centralized,B,0.93,3507.05,3261.56
+VCS296,Energy from renewables,India,Southern Asia,RE Bundled,,1.0,5866.31,5866.31
+VCS1143,Ningxia Angli Lingwu Photovoltaic Grid Connected Power Plant Project,China,Eastern Asia,Solar - Centralized,,1.04,6117.6,6362.3
+GS5928,2x50 MW Orange Suvaan Solar Photovoltaic Power Project in Maharashtra India,India,Southern Asia,Solar - Centralized,,1.05,8400.58,8820.61
+VCS1248,CGN Hami Phase I 20MWp Grid-connected PV Power Plant Project,China,Eastern Asia,Solar - Centralized,,1.05,4204.74,4414.97
+VCS395,Inner Mongolia Sunjiaying 50.25MW Wind Power Project,China,Eastern Asia,Wind,BB,1.1,3496.59,3846.25
+GS906,Canakkale WPP,Türkiye,Western Asia,Wind,BB,1.19,23136.76,27532.74
+GS636,GUNAYSE  HPP,Türkiye,Western Asia,Hydropower,BB,1.13,3538.52,3998.53
+VCS1032,Xundian Jinfeng 12.6MW Hydropower Project,China,Eastern Asia,Hydropower,BBB,1.2,9933.18,11919.81
+VCS869,"2 x 3.5 MW Ullunkal Hydro Power Project in Kerala, India.",India,Southern Asia,Hydropower,,1.13,3127.09,3533.61
+GS455,*Ningxia Yinyi 49.50MW Wind-farm Project_preCDM VERs,China,Eastern Asia,Wind,,1.23,3433.0,4222.59
+VCS56,"Manasi River Stage I Hydropower Project of Hongshanzui Hydropower Plant, Xinjiang Tianfu Thermoelectric Co., Ltd.",China,Eastern Asia,Hydropower,BB,1.18,3579.58,4223.9
+ACR0177,Monjolinho Energética S/A Hydropower Plant Project (Alzir dos Santos Antunes),Brazil,Latin America and the Caribbean,Hydropower,B,1.08,3840.17,4147.38
+VCS509,6.65 MW wind energy generation by GTN Enterprises Ltd,India,Southern Asia,Wind,B,1.09,744.99,812.04
+VCS471,"The Bogeda 40.5 MW Wind-Farm Project in Urumqi, Xinjiang, China",China,Eastern Asia,Wind,BB,1.21,1619.41,1959.49
+VCS238,"Mobuya Mini Hydro Power Plant 3 x 1000 kW North Sulawesi, Indonesia",Indonesia,South-Eastern Asia,Hydropower,B,1.13,1486.86,1680.15
+VCS396,Inner Mongolia Bayannaoer Chuanjingsumu 49.3MW Wind Power Project,China,Eastern Asia,Wind,A,1.36,7765.01,10560.42
+GS472,InfraVest Changbin and Taichung bundled Wind Farms Project - Taiwan (300190),Taiwan,Eastern Asia,Wind,BB,1.35,11610.36,15673.98
+VCS724,"53.75 MW Bundled wind Power project in Tamil Nadu  and Karnataka by KBD Group, India",India,Southern Asia,Wind,BB,1.28,2776.75,3554.24
+VCS1198,Pembelik Hydro Electricity Power Plant,Türkiye,Western Asia,Hydropower,BBB,1.36,3961.1,5387.09
+VCS325,Lugouhe Hydropower Station Project,China,Eastern Asia,Hydropower,BB,1.3,573.06,744.97
+GS566,Prony and Kafeate wind-farms New Caledonia (300344),New Caledonia,Oceania,Wind,,1.26,1786.83,2251.4
+VCS1308,Parque Eolico Maldonado,Uruguay,Latin America and the Caribbean,RE Bundled,B,1.19,2414.21,2872.91
+GS2478,Solar Power Company 94MW Project,Thailand,South-Eastern Asia,Solar - Centralized,,1.27,2019.33,2564.55
+GS7724,180 MW Renewable Energy Project by Greenko Group,India,Southern Asia,Solar - Centralized,,1.27,1122.24,1425.24
+VCS1406,Jingyuan County 100MW Solar Power Generation Project,China,Eastern Asia,Solar - Centralized,BB,1.33,1597.26,2124.36
+GS947,Killik Wind Power Plant,Türkiye,Western Asia,Wind,BBB,1.47,8108.7,11919.79
+VCS112,"Yunnan Nameguo, Faguo Hydropower stations",China,Eastern Asia,Hydropower,A,1.49,3320.99,4948.27
+VCS371,Guangdong Lankou 26MW Hydro Power Project,China,Eastern Asia,Hydropower,BBB,1.45,1603.61,2325.23
+VCS682,"Wind Power Project at Anthiyur, Tamil Nadu",India,Southern Asia,Wind,A,1.53,1929.7,2952.44
+GS3969,100.5 MW Wind Power Project in Madhya Pradesh India,India,Southern Asia,Wind,BB,1.52,75.5,114.76
+GS6356,Solar Water Heater Program in India-CPA-6,India,Southern Asia,Solar Water Heaters,BB,1.46,572.32,835.59

@@ -41,6 +41,29 @@
   -d '{"csv": "Project Name,Region,Price per Tonne,Tonnes Chosen\nAlpha,Africa,12.5,1000"}'</code></pre>
     </section>
 
+    <section class="card risk-card" id="risk-section" aria-label="Risk Optimisation Slider">
+      <div class="risk-header">
+        <div>
+          <h2>Risk Tolerance &amp; Optimisation</h2>
+          <p class="risk-subtitle">Adjust risk appetite to load algorithmically optimised CVaR portfolios</p>
+        </div>
+        <div class="risk-badge-box">
+          <span class="risk-badge-title" id="risk-level-name">Medium Risk</span>
+          <span class="risk-badge-metric" id="risk-badge-metric">1.8% chance of shortfall</span>
+        </div>
+      </div>
+      <div class="slider-container">
+        <input type="range" id="risk-slider" min="1" max="5" step="1" value="3" aria-label="Portfolio risk slider">
+        <div class="slider-labels">
+          <span class="step-label" data-step="1">Very Low</span>
+          <span class="step-label" data-step="2">Low</span>
+          <span class="step-label active" data-step="3">Medium</span>
+          <span class="step-label" data-step="4">High</span>
+          <span class="step-label" data-step="5">Very High</span>
+        </div>
+      </div>
+    </section>
+
     <section class="card upload" id="upload-card" aria-label="Load data">
       <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose or drop a CSV file">
         <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>

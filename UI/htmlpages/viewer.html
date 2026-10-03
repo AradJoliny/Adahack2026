@@ -183,7 +183,15 @@
     #map-section {
       display: none;
       margin-top: 40px;
-      width: 100%;
+      background: #93CAED;
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      padding: 24px clamp(24px, 4vw, 72px);
+      box-sizing: border-box;
     }
 
     .map-inner {
@@ -192,22 +200,14 @@
     }
 
     #map-section h2 {
-      font-size: clamp(1.6rem, 2.6vw, 2.4rem);
-      font-weight: 400;
-      text-align: center;
-      color: #90a955;
-      margin-bottom: 20px;
-    }
-
-    .map-box {
-      position: relative;
-      background: #93CAED;
-      border: 10px solid #4f772d;
-      box-sizing: border-box;
+      font-size: 1.3rem;
+      color: #ecf39e;
+      margin-bottom: 12px;
     }
 
     #map {
       width: 100%;
+      max-height: 50vh;
       display: block;
     }
 
@@ -227,13 +227,10 @@
     }
 
     .scale {
-      position: absolute;
-      left: 50%;
-      bottom: 14px;
-      transform: translateX(-50%);
       display: flex;
       align-items: center;
       gap: 12px;
+      margin-top: 14px;
       color: #ecf39e;
       font-weight: 600;
       font-size: .95rem;
@@ -283,7 +280,12 @@
 <body>
   <header>
     <h1>Carbon Portfolio Viewer</h1>
-    <span class="badge" id="risk-badge">Risk: {{ risk_name }} ({{ risk_level }}/5)</span>
+    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+      <span class="badge" id="risk-badge">Risk: {{ risk_name }} ({{ risk_level }}/5)</span>
+      {% if risk_metrics and risk_metrics.p_shortfall is not none %}
+      <span class="badge" style="background: #31572c; color: #ecf39e;" id="shortfall-badge">{{ (risk_metrics.p_shortfall * 100)|round(1) }}% Shortfall Risk</span>
+      {% endif %}
+    </div>
   </header>
 
   <section class="panel">
@@ -306,10 +308,8 @@
     <div id="map-section">
       <div class="map-inner">
         <h2>Where your investments are</h2>
-        <div class="map-box">
-          <svg id="map" role="img" aria-label="World map of investments by country"></svg>
-          <div class="scale"><span id="scale-min">$0</span><span class="bar"></span><span id="scale-max"></span></div>
-        </div>
+        <svg id="map" role="img" aria-label="World map of investments by country"></svg>
+        <div class="scale"><span id="scale-min">$0</span><span class="bar"></span><span id="scale-max"></span></div>
         <p id="map-note"></p>
       </div>
     </div>
