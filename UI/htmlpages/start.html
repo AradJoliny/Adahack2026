@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create a diverse carbon portfolio.">
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+
+  <style>
+    .top-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 16px 24px 0 24px;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .hack-title {
+      font-size: 1.0rem;
+      font-weight: 700;
+      color: #31572c;
+      letter-spacing: 0.05em;
+    }
+
+    .group-tag {
+      font-size: 1.0rem;
+      letter-spacing: 0.05em;
+      color: #31572c;
+      text-transform: uppercase;
+    }
+
+
+    .top-line {
+      border: 0;
+      height: 1px;
+      background: #31572c;
+      opacity: 0.4;
+      width: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: #ecf39e url("{{ url_for('static', filename='background.jpg') }}") no-repeat center bottom / cover;
+      color: #0f172a;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      padding: 56px 48px;
+      text-align: center;
+      max-width: 900px;
+      width: 90%;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 4.5rem);
+      margin-bottom: 48px;
+      color: #4f772d;
+      line-height: 1.2;
+    }
+
+    .btn-start {
+      display: inline-block;
+      background: #4f772d;
+      color: #ecf39e;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.4rem;
+      padding: 18px 56px;
+      border-radius: 0;
+      transition: all .2s ease;
+    }
+
+    .btn-start:hover {
+      background: #31572c;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+  <header class="top-header">
+    <div class="header-row">
+      <div class="header-left">
+        <!-- Put your image in the static folder, e.g. static/logo.png -->
+        <img src="{{ url_for('static', filename='hoppersBunny.png') }}" alt="Ada Hack" class="header-logo">
+        <span class="hack-title">Ada Hack 2026</span>
+      </div>
+      <span class="group-tag">Group 6: Arad, Alex, Elisabeth, Tom</span>
+    </div>
+    <hr class="top-line">
+  </header>
+
+
+  <main class="card">
+    <h1>Create Diverse Sustainible Portfolio</h1>
+    <a id="start-button" href="{{ url_for('risk') }}" class="btn-start">Start &rarr;</a>
+  </main>
+
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Choose your investment risk level for your carbon portfolio.">
+  <title>Risk Selection</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: #ecf39e;
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      padding: 48px;
+      max-width: 1000px;
+      width: 92%;
+      text-align: center;
+    }
+
+    h1 {
+      color: #4f772d;
+      font-size: clamp(2rem, 3.6vw, 3.2rem);
+      margin-bottom: 12px;
+    }
+
+    .sub {
+      color: #4f772d;
+      margin-bottom: 56px;
+      font-size: 1.3rem;
+    }
+
+    .value {
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 700;
+      color: #4f772d;
+      margin-bottom: 8px;
+      transition: color .2s;
+    }
+
+    .desc {
+      color: #4f772d;
+      min-height: 3em;
+      margin-bottom: 40px;
+      font-size: 1.3rem;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 0;
+      outline: none;
+      cursor: pointer;
+      background: linear-gradient(to right, #ecf39e, #90a955, #4f772d, #31572c, #132a13);
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 0;
+      background: #fff;
+      border: 5px solid #4f772d;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+      transition: transform .15s;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      border-color: #31572c;
+    }
+
+    input[type=range]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 0;
+      background: #fff;
+      border: 5px solid #4f772d;
+    }
+
+    .labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      color: #31572c;
+      font-size: .9rem;
+      font-weight: 600;
+    }
+
+    .actions {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    a.back {
+      color: #4f772d;
+      text-decoration: none;
+    }
+
+    a.back:hover {
+      text-decoration: underline;
+    }
+
+    button {
+      background: #4f772d;
+      color: #ecf39e;
+      border: 0;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 12px 32px;
+      border-radius: 0;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    button:hover {
+      background: #31572c;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <h1>Select Your Risk Level</h1>
+    <p class="sub">How much investment risk are you comfortable with?</p>
+
+    <div class="value" id="risk-label">Medium</div>
+    <p class="desc" id="risk-desc"></p>
+
+    <input type="range" id="risk-slider" min="1" max="5" step="1" value="3" aria-label="Investment risk level">
+    <div class="labels"><span>Low</span><span>High</span></div>
+
+    <div class="actions">
+      <a id="back-link" class="back" href="{{ url_for('start') }}">&larr; Back</a>
+      <button id="continue-button" type="button">Continue &rarr;</button>
+    </div>
+  </main>
+
+  <script>
+    const levels = {
+      1: ["Very Low", "Capital preservation. Stable, lower-return carbon assets."],
+      2: ["Low", "Mostly stable holdings with limited exposure to volatility."],
+      3: ["Medium", "A balanced mix of stability and growth."],
+      4: ["High", "Growth focused, accepting larger price swings."],
+      5: ["Very High", "Maximum return potential with significant volatility."]
+    };
+    const slider = document.getElementById("risk-slider");
+    const label = document.getElementById("risk-label");
+    const desc = document.getElementById("risk-desc");
+
+    function update() {
+      const [name, text] = levels[slider.value];
+      label.textContent = name;
+      desc.textContent = text;
+    }
+    slider.addEventListener("input", update);
+    update();
+
+    document.getElementById("continue-button").addEventListener("click", () => {
+      sessionStorage.setItem("riskLevel", slider.value);
+      window.location.href = "{{ url_for('viewer') }}?risk=" + slider.value;
+    });
+  </script>
+</body>
+
+</html>
