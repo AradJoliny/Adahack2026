@@ -22,7 +22,7 @@ def loss_fraction(has_buffer_pool):
     return np.where(has_buffer_pool, 0.5, 1.0)
 
 # Expected tonnes delivery per tonne bought
-def expected_deliery(fp, lf):
+def expected_delivery(fp, lf):
     return (1 - fp * lf) 
 
 # p_i / m_i: price per expected tonne delivered (Algorithm 1 sort key)
@@ -39,7 +39,7 @@ df = pd.read_csv(csv_path, sep=",", thousands=",")
 df["base"] = base_failure(df["risk_rating"])
 df["q"] = failure_probability(df["base"], df["had_reversal"].eq("Yes"))
 df["L"] = loss_fraction(df["has_buffer_pool"].eq("Yes"))
-df["m"] = expected_deliery(df["q"], df["L"])
+df["m"] = expected_delivery(df["q"], df["L"])
 df["effective_price"] = effective_price(df["price_usd_per_t"], df["m"])
 
 
