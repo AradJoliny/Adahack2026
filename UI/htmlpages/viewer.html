@@ -26,10 +26,20 @@
       display: flex;
       flex-direction: column;
       width: 100%;
+      margin: 0;
+      padding: 32px 0;
+      font-size: 1.05rem;
+    }
+
+    header,
+    .panel,
+    .nav {
+      width: 100%;
       max-width: 1600px;
       margin: 0 auto;
-      padding: 32px clamp(24px, 4vw, 72px);
-      font-size: 1.05rem;
+      padding-left: clamp(24px, 4vw, 72px);
+      padding-right: clamp(24px, 4vw, 72px);
+      box-sizing: border-box;
     }
 
     header {
@@ -56,7 +66,8 @@
     }
 
     .panel {
-      padding: 8px 0;
+      padding-top: 8px;
+      padding-bottom: 8px;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -184,17 +195,13 @@
       display: none;
       margin-top: 40px;
       background: #93CAED;
-      width: 100vw;
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
-      padding: 24px clamp(24px, 4vw, 72px);
+      width: 100%;
+      padding: 32px clamp(24px, 4vw, 72px);
       box-sizing: border-box;
     }
 
     .map-inner {
+      width: 100%;
       max-width: 1600px;
       margin: 0 auto;
     }
@@ -305,15 +312,17 @@
       <svg id="pie" viewBox="-1.1 -1.1 2.2 2.2" role="img" aria-label="Portfolio pie chart"></svg>
       <ul id="legend"></ul>
     </div>
-    <div id="map-section">
-      <div class="map-inner">
-        <h2>Where your investments are</h2>
-        <svg id="map" role="img" aria-label="World map of investments by country"></svg>
-        <div class="scale"><span id="scale-min">$0</span><span class="bar"></span><span id="scale-max"></span></div>
-        <p id="map-note"></p>
-      </div>
-    </div>
   </section>
+
+  <div id="map-section">
+    <div class="map-inner">
+      <h2>Where your investments are</h2>
+      <svg id="map" role="img" aria-label="World map of investments by country"></svg>
+      <div class="scale"><span id="scale-min">$0</span><span class="bar"></span><span id="scale-max"></span></div>
+      <p id="map-note"></p>
+    </div>
+  </div>
+
   <div id="tooltip"></div>
 
   <nav class="nav">
