@@ -12,21 +12,25 @@ LEVEL_KEY_MAP = {1: "very_low", 2: "low", 3: "medium", 4: "high", 5: "very_high"
 
 SAMPLE_CSV = os.path.join(os.path.dirname(__file__), "data", "sample_portfolio.csv")
 
-# Abstract CSV schema: canonical field -> accepted header names (lowercase).
-# Final CSV columns are not settled, so extend these lists as needed.
+# Abstract CSV schema: canonical field -> accepted header names.
 COLUMN_ALIASES = {
-    "name": ["project name", "project", "name"],
-    "status": ["status"],
-    "type": ["project type", "type"],
-    "region": ["region"],
-    "country": ["country"],
-    "developer": ["developer"],
-    "vintage": ["vintage year", "vintage"],
-    "price": ["price per tonne", "price", "price_per_tonne"],
-    "risk": ["risk", "risk level"],
-    "tonnes": ["tonnes", "tonnes chosen", "tonnes selected", "quantity", "amount"],
+    "name": ["project name", "project_name", "project", "name", "project title", "title"],
+    "status": ["status", "project status", "stage"],
+    "type": ["project type", "project_type", "type", "category"],
+    "region": ["region", "continent", "area"],
+    "country": ["country", "nation", "location"],
+    "developer": ["developer", "proponent", "owner"],
+    "vintage": ["vintage year", "vintage_year", "vintage", "year"],
+    "price": ["price per tonne", "price_per_tonne", "price", "price_usd_per_t", "cost per tonne"],
+    "risk": ["risk", "risk level", "risk_rating", "risk score"],
+    "tonnes": ["tonnes", "tonnes chosen", "tonnes_chosen", "tonnes selected", "tonnes bought", "tonnes_bought", "quantity", "amount"],
 }
 NUMERIC_FIELDS = {"price", "tonnes"}
+
+
+def _norm_header(h):
+  import re
+  return re.sub(r"[^a-z0-9]+", " ", str(h).lower()).strip()
 
 
 def _to_number(value):
@@ -40,17 +44,25 @@ def parse_investments(csv_text):
   """Turns CSV text into a list of normalised investment dicts."""
   reader = csv.DictReader(io.StringIO(csv_text))
   lookup = {}
+  norm_aliases = {
+      field: [_norm_header(a) for a in aliases]
+      for field, aliases in COLUMN_ALIASES.items()
+  }
   for header in reader.fieldnames or []:
-    for field, aliases in COLUMN_ALIASES.items():
-      if header.strip().lower() in aliases:
+    norm_h = _norm_header(header)
+    for field, aliases in norm_aliases.items():
+      if norm_h in aliases:
         lookup[field] = header
+        break
+
   rows = []
   for raw in reader:
     row = {}
     for field in COLUMN_ALIASES:
       value = raw.get(lookup[field], "") if field in lookup else ""
       row[field] = _to_number(value) if field in NUMERIC_FIELDS else (value or "").strip()
-    row["invested"] = row["price"] * row["tonnes"]
+    total_spend = _to_number(raw.get("total_spend", 0.0))
+    row["invested"] = total_spend if total_spend > 0 else (row["price"] * row["tonnes"])
     rows.append(row)
   return rows
 
