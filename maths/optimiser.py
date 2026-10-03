@@ -30,7 +30,9 @@ def effective_price(p, m):
     return p / m
 
 # import credits dataframe
-csv_path = Path(__file__).resolve().parent.parent / "credits.csv"
+csv_path = Path(__file__).resolve().parent / "credits.csv"
+if not csv_path.exists():
+    csv_path = Path(__file__).resolve().parent.parent / "credits.csv"
 df = pd.read_csv(csv_path, sep=",", thousands=",")
 
 # Apply the equations column-wise

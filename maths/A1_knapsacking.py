@@ -1,3 +1,7 @@
+import os
+print(os.getcwd())
+print(os.listdir())
+
 import pandas as pd
 from optimiser import df
 
