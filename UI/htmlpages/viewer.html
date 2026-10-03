@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View your carbon portfolio.">
+  <title>Carbon Portfolio Viewer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: #ecf39e;
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin: 0;
+      padding: 32px 0;
+      font-size: 1.05rem;
+    }
+
+    header,
+    .panel,
+    .nav {
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding-left: clamp(24px, 4vw, 72px);
+      padding-right: clamp(24px, 4vw, 72px);
+      box-sizing: border-box;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #90a955;
+      padding-bottom: 16px;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      color: #4f772d;
+      font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+    }
+
+    .badge {
+      background: #90a955;
+      color: #132a13;
+      padding: 8px 16px;
+      border-radius: 0;
+      font-weight: 700;
+      font-size: .95rem;
+    }
+
+    .panel {
+      padding-top: 8px;
+      padding-bottom: 8px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel p {
+      color: #475569;
+    }
+
+    a {
+      color: #4f772d;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover {
+      color: #31572c;
+      text-decoration: underline;
+    }
+
+    .nav {
+      margin-top: 24px;
+    }
+
+    .total {
+      display: inline-block;
+      background: #90a955;
+      color: #132a13;
+      padding: 10px 18px;
+      border-radius: 0;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .total small {
+      display: block;
+      color: #132a13;
+      opacity: 0.85;
+      font-weight: 600;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .total #total-spent {
+      font-size: 1.5rem;
+      color: #132a13;
+      font-weight: 700;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .controls select {
+      background: #ffffff;
+      color: #132a13;
+      border: 1px solid #90a955;
+      font-family: inherit;
+      padding: 8px 12px;
+      border-radius: 0;
+      font-size: .95rem;
+    }
+
+    .viz {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .viz {
+      flex: 1;
+      gap: clamp(32px, 6vw, 96px) !important;
+    }
+
+    #pie {
+      width: min(70vh, 48vw);
+      height: min(70vh, 48vw);
+      min-width: 300px;
+      min-height: 300px;
+    }
+
+    #pie path {
+      stroke: none;
+      cursor: pointer;
+      transition: transform .15s, opacity .15s;
+      transform-origin: 0 0;
+    }
+
+    #pie path:hover {
+      transform: scale(1.05);
+    }
+
+    #pie:hover path:not(:hover) {
+      opacity: .55;
+    }
+
+    #legend {
+      list-style: none;
+      min-width: 260px;
+    }
+
+    #legend li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+      color: #132a13;
+      font-size: 1.05rem;
+    }
+
+    #legend .dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 0;
+      flex: none;
+    }
+
+    #map-section {
+      display: none;
+      margin-top: 40px;
+      background: #93CAED;
+      width: 100%;
+      padding: 32px clamp(24px, 4vw, 72px);
+      box-sizing: border-box;
+    }
+
+    .map-inner {
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    #map-section h2 {
+      font-size: 1.3rem;
+      color: #ecf39e;
+      margin-bottom: 12px;
+    }
+
+    #map {
+      width: 100%;
+      max-height: 50vh;
+      display: block;
+    }
+
+    #map path {
+      stroke: #ffffff;
+      stroke-width: 0.3;
+      vector-effect: non-scaling-stroke;
+    }
+
+    #map path.hit {
+      cursor: pointer;
+    }
+
+    #map path.hit:hover {
+      stroke: #022c22;
+      stroke-width: 1.5;
+    }
+
+    .scale {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+      color: #ecf39e;
+      font-weight: 600;
+      font-size: .95rem;
+    }
+
+    .scale .bar {
+      width: 260px;
+      height: 14px;
+      background: linear-gradient(to right, #ecf39e, #90a955, #4f772d, #31572c, #132a13);
+      border: 1px solid rgba(19, 42, 19, 0.2);
+    }
+
+    #map-note {
+      color: #1e3a1e;
+      font-size: .85rem;
+      margin-top: 8px;
+    }
+
+    #tooltip {
+      position: fixed;
+      pointer-events: none;
+      display: none;
+      z-index: 10;
+      background: #ffffff;
+      color: #132a13;
+      border: 1px solid #4f772d;
+      border-radius: 0;
+      padding: 14px 18px;
+      font-size: 1rem;
+      line-height: 1.55;
+      max-width: 340px;
+      box-shadow: 0 8px 24px rgba(19, 42, 19, .18);
+    }
+
+    #tooltip strong {
+      color: #31572c;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    #tooltip span {
+      color: #4f772d;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Carbon Portfolio Viewer</h1>
+    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+      <span class="badge" id="risk-badge">Risk: {{ risk_name }} ({{ risk_level }}/5)</span>
+      {% if risk_metrics and risk_metrics.p_shortfall is not none %}
+      <span class="badge" style="background: #31572c; color: #ecf39e;" id="shortfall-badge">{{ (risk_metrics.p_shortfall * 100)|round(1) }}% Shortfall Risk</span>
+      {% endif %}
+    </div>
+  </header>
+
+  <section class="panel">
+    <div class="total" id="money-spent">
+      <small>Money spent</small>
+      <span id="total-spent">$0</span>
+    </div>
+    <div class="controls">
+      <label for="slice-mode">Slice size represents:</label>
+      <select id="slice-mode">
+        <option value="invested">Amount invested ($)</option>
+        <option value="tonnes">Carbon saved (tonnes)</option>
+        <option value="region">Region (grouped, by $ invested)</option>
+      </select>
+    </div>
+    <div class="viz">
+      <svg id="pie" viewBox="-1.1 -1.1 2.2 2.2" role="img" aria-label="Portfolio pie chart"></svg>
+      <ul id="legend"></ul>
+    </div>
+  </section>
+
+  <div id="map-section">
+    <div class="map-inner">
+      <h2>Where your investments are</h2>
+      <svg id="map" role="img" aria-label="World map of investments by country"></svg>
+      <div class="scale"><span id="scale-min">$0</span><span class="bar"></span><span id="scale-max"></span></div>
+      <p id="map-note"></p>
+    </div>
+  </div>
+
+  <div id="tooltip"></div>
+
+  <nav class="nav">
+    <a id="back-link" href="{{ url_for('risk') }}">&larr; Change risk level</a>
+  </nav>
+  <script>
+    // Normalised rows from the CSV adapter in app.py.
+    const INVESTMENTS = {{ investments | tojson }};
+    const COLORS = [
+      "#d35400", // Burnt Pumpkin Orange
+      "#9e2a2b", // Maple Crimson
+      "#dda15e", // Warm Golden Ochre
+      "#588157", // Autumn Forest Green
+      "#6f1a07", // Deep Burgundy
+      "#e28743", // Warm Amber
+      "#a44a3f", // Terracotta
+      "#708238", // Olive Bark
+      "#8b4513", // Chestnut Brown
+      "#b85d19", // Russet Copper
+      "#c08552", // Spiced Cider
+      "#5c2438", // Autumn Plum
+      "#bc4749", // Dried Cranberry
+      "#d4a373", // Toasted Pecan
+      "#3a5a40", // Deep Pine
+      "#854d0e", // Dark Mustard Ochre
+      "#ea580c", // Rich Persimmon
+      "#a0522d", // Sienna
+      "#6b2d5c", // Mulled Wine
+      "#b45309", // Warm Toffee
+      "#4a5320", // Mossy Olive
+      "#9a3412", // Burnt Rust
+      "#c25953", // Rose Hip Red
+      "#78350f"  // Walnut Shell
+    ];
+    const FIELDS = [
+      ["Status", "status"], ["Type", "type"], ["Region", "region"], ["Country", "country"],
+      ["Developer", "developer"], ["Vintage", "vintage"], ["Risk", "risk"]
+    ];
+    const money = n => "$" + n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    const num = n => n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+    const pie = document.getElementById("pie");
+    const legend = document.getElementById("legend");
+    const tip = document.getElementById("tooltip");
+    const select = document.getElementById("slice-mode");
+
+    function buildSlices(mode) {
+      if (mode !== "region") {
+        return INVESTMENTS.map(r => ({ label: r.name, value: r[mode], rows: [r] }));
+      }
+      const groups = {};
+      INVESTMENTS.forEach(r => {
+        const k = r.region || "Unknown";
+        (groups[k] = groups[k] || { label: k, value: 0, rows: [] });
+        groups[k].value += r.invested;
+        groups[k].rows.push(r);
+      });
+      return Object.values(groups);
+    }
+
+    function tooltipHtml(s) {
+      const invested = s.rows.reduce((a, r) => a + r.invested, 0);
+      const tonnes = s.rows.reduce((a, r) => a + r.tonnes, 0);
+      let html = `<strong>${esc(s.label)}</strong>`;
+      if (s.rows.length === 1) {
+        const r = s.rows[0];
+        FIELDS.forEach(([l, k]) => { if (r[k] !== "") html += `<span>${l}:</span> ${esc(r[k])}<br>`; });
+        html += `<span>Price/tonne:</span> ${money(r.price)}<br>`;
+      } else {
+        html += `<span>Projects:</span> ${s.rows.length}<br>`;
+        html += s.rows.map(r => esc(r.name)).join(", ") + "<br>";
+      }
+      html += `<span>Tonnes:</span> ${num(tonnes)}<br><span>Invested:</span> ${money(invested)}`;
+      return html;
+    }
+
+    function render() {
+      const slices = buildSlices(select.value).filter(s => s.value > 0);
+      const total = slices.reduce((a, s) => a + s.value, 0);
+      pie.innerHTML = ""; legend.innerHTML = "";
+      let angle = -Math.PI / 2;
+      slices.forEach((s, i) => {
+        const frac = s.value / total, end = angle + frac * 2 * Math.PI;
+        const color = COLORS[i % COLORS.length];
+        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        if (slices.length === 1) {
+          p.setAttribute("d", "M 0 -1 A 1 1 0 1 1 0 1 A 1 1 0 1 1 0 -1 Z");
+        } else {
+          const x1 = Math.cos(angle), y1 = Math.sin(angle), x2 = Math.cos(end), y2 = Math.sin(end);
+          p.setAttribute("d", `M 0 0 L ${x1} ${y1} A 1 1 0 ${frac > .5 ? 1 : 0} 1 ${x2} ${y2} Z`);
+        }
+        p.setAttribute("fill", color);
+        p.addEventListener("mousemove", e => {
+          tip.innerHTML = tooltipHtml(s) + `<br><span>Share:</span> ${(frac * 100).toFixed(1)}%`;
+          tip.style.display = "block";
+          const x = e.clientX + 16, y = e.clientY + 16;
+          tip.style.left = Math.min(x, innerWidth - tip.offsetWidth - 8) + "px";
+          tip.style.top = Math.min(y, innerHeight - tip.offsetHeight - 8) + "px";
+        });
+        p.addEventListener("mouseleave", () => tip.style.display = "none");
+        pie.appendChild(p);
+        legend.insertAdjacentHTML("beforeend",
+          `<li><span class="dot" style="background:${color}"></span>${esc(s.label)} · ${(frac * 100).toFixed(1)}%</li>`);
+        angle = end;
+      });
+      if (!slices.length) legend.innerHTML = "<li>No investment data.</li>";
+    }
+
+    document.getElementById("total-spent").textContent =
+      money(INVESTMENTS.reduce((a, r) => a + r.invested, 0));
+
+    // ---- Mercator heat map (shown in Region mode) ----
+    const WORLD_URL = "{{ url_for('static', filename='world.geojson') }}";
+    const COUNTRY_ALIASES = {
+      "usa": "united states of america", "us": "united states of america",
+      "united states": "united states of america", "uk": "united kingdom",
+      "russia": "russia", "drc": "democratic republic of the congo",
+      "tanzania": "united republic of tanzania", "south korea": "south korea",
+      "vietnam": "vietnam", "viet nam": "vietnam",
+      "türkiye": "turkey", "turkiye": "turkey", "turkey": "turkey",
+      "ivory coast": "ivory coast", "cote d'ivoire": "ivory coast"
+    };
+    const normCountry = c => {
+      const k = String(c || "").trim().toLowerCase();
+      const clean = k.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      if (k === "viet nam" || clean === "viet nam") return "vietnam";
+      if (k === "türkiye" || clean === "turkiye" || clean === "turkey") return "turkey";
+      return COUNTRY_ALIASES[k] || COUNTRY_ALIASES[clean] || k;
+    };
+    const mapSvg = document.getElementById("map");
+    const mapSection = document.getElementById("map-section");
+    let worldData = null;
+
+    // Mercator: x = longitude (deg), y = -ln(tan(pi/4 + lat/2)) in degrees (down = south).
+    const mercY = lat => {
+      const l = Math.max(-85, Math.min(85, lat)) * Math.PI / 180;
+      return -Math.log(Math.tan(Math.PI / 4 + l / 2)) * 180 / Math.PI;
+    };
+    const ringPath = ring => ring.map((p, i) => (i ? "L" : "M") + p[0].toFixed(2) + " " + mercY(p[1]).toFixed(2)).join("") + "Z";
+    const geomPath = g => {
+      const polys = g.type === "Polygon" ? [g.coordinates] : g.coordinates;
+      return polys.map(poly => poly.map(ringPath).join("")).join("");
+    };
+    const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+    const SCALE = [[236, 243, 158], [144, 169, 85], [79, 119, 45], [49, 87, 44], [19, 42, 19]]; // #ecf39e #90a955 #4f772d #31572c #132a13
+    const greenAt = t => {
+      const x = Math.max(0, Math.min(1, t)) * (SCALE.length - 1);
+      const i = Math.min(Math.floor(x), SCALE.length - 2);
+      return "rgb(" + mix(SCALE[i], SCALE[i + 1], x - i).join(",") + ")";
+    };
+
+    function renderMap() {
+      if (!worldData) return;
+      const byCountry = {};
+      INVESTMENTS.forEach(r => {
+        const k = normCountry(r.country);
+        const g = byCountry[k] = byCountry[k] || { country: r.country, invested: 0, tonnes: 0, projects: [] };
+        g.invested += r.invested; g.tonnes += r.tonnes; g.projects.push(r.name);
+      });
+      const totals = Object.values(byCountry).map(g => g.invested);
+      const max = Math.max(0, ...totals);
+      const min = totals.length ? Math.min(...totals) : 0;
+      const used = new Set();
+      mapSvg.setAttribute("viewBox", `-180 ${mercY(80)} 360 ${mercY(-57) - mercY(80)}`);
+      mapSvg.innerHTML = "";
+      worldData.features.forEach(f => {
+        const key = f.properties.name.toLowerCase();
+        const g = byCountry[key];
+        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        p.setAttribute("d", geomPath(f.geometry));
+        p.setAttribute("fill", g ? greenAt(max > min ? (g.invested - min) / (max - min) : 1) : "#eef2f1");
+        if (g) {
+          used.add(key); p.classList.add("hit");
+          p.addEventListener("mousemove", e => {
+            tip.innerHTML = `<strong>${esc(f.properties.name)}</strong>` +
+              `<span>Invested:</span> ${money(g.invested)}<br><span>Tonnes:</span> ${num(g.tonnes)}<br>` +
+              `<span>Projects:</span> ${g.projects.map(esc).join(", ")}`;
+            tip.style.display = "block";
+            tip.style.left = Math.min(e.clientX + 16, innerWidth - tip.offsetWidth - 8) + "px";
+            tip.style.top = Math.min(e.clientY + 16, innerHeight - tip.offsetHeight - 8) + "px";
+          });
+          p.addEventListener("mouseleave", () => tip.style.display = "none");
+        }
+        mapSvg.appendChild(p);
+      });
+      document.getElementById("scale-min").textContent = money(min);
+      document.getElementById("scale-max").textContent = money(max);
+      const missing = Object.keys(byCountry).filter(k => !used.has(k)).map(k => byCountry[k].country);
+      document.getElementById("map-note").textContent =
+        missing.length ? "Not shown on map (unrecognised country): " + missing.join(", ") : "";
+    }
+
+    function updateMap() {
+      const show = select.value === "region";
+      mapSection.style.display = show ? "block" : "none";
+      if (show && !worldData) {
+        fetch(WORLD_URL).then(r => r.json()).then(d => { worldData = d; renderMap(); });
+      } else if (show) {
+        renderMap();
+      }
+    }
+
+    select.addEventListener("change", () => { render(); updateMap(); });
+    render();
+  </script>
+</body>
+
+</html>
