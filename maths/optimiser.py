@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from pathlib import Path
 
 
 # base failure rates 
@@ -29,9 +30,10 @@ def effective_price(p, m):
     return p / m
 
 # import credits dataframe
-df = pd.read_csv("credits.csv", sep="\t", thousands=",")
+csv_path = Path(__file__).resolve().parent.parent / "credits.csv"
+df = pd.read_csv(csv_path, sep=",", thousands=",")
 
-# Apply the equations column-wise, storing results as 
+# Apply the equations column-wise
 df["base"] = base_failure(df["risk_rating"])
 df["q"] = failure_probability(df["base"], df["had_reversal"].eq("Yes"))
 df["L"] = loss_fraction(df["has_buffer_pool"].eq("Yes"))
