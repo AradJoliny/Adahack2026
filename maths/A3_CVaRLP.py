@@ -52,7 +52,7 @@ if __name__ == "__main__":
     price = cands["price_usd_per_t"].to_numpy()
     # Optimise on one set of scenarios, test on a fresh set
     # simulate_copula returns (scenarios, projects), so .T flips it to (projects, scenarios)
-    d_train = simulate_copula(cands, n_scenarios=2_000, seed=1).T
+    d_train = simulate_copula(cands, n_scenarios=5_000, seed=1).T
     d_test = simulate_copula(cands, n_scenarios=5_000, seed=2).T
     cvar_tonnes = cvar_portfolio(cands, d_train)
     # Put greedy's purchases on the same candidate list for a fair comparison
