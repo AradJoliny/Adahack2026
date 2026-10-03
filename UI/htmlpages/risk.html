@@ -6,7 +6,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Choose your investment risk level for your carbon portfolio.">
   <title>Risk Selection</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
   <style>
+    .top-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 16px 24px 0 24px;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .hack-title {
+      font-size: 1.0rem;
+      font-weight: 700;
+      color: #31572c;
+      letter-spacing: 0.05em;
+    }
+
+    .group-tag {
+      font-size: 1.0rem;
+      letter-spacing: 0.05em;
+      color: #31572c;
+      text-transform: uppercase;
+    }
+
+    .top-line {
+      border: 0;
+      height: 1px;
+      background: #31572c;
+      opacity: 0.4;
+      width: 100%;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -138,6 +188,17 @@
 </head>
 
 <body>
+  <header class="top-header">
+    <div class="header-row">
+      <div class="header-left">
+        <img src="{{ url_for('static', filename='hoppersBunny.png') }}" alt="Ada Hack" class="header-logo">
+        <span class="hack-title">Ada Hack 2026</span>
+      </div>
+      <span class="group-tag">Group 6: Arad, Alex, Elisabeth, Tom</span>
+    </div>
+    <hr class="top-line">
+  </header>
+
   <main class="card">
     <h1>Select Your Risk Level</h1>
     <p class="sub">How much investment risk are you comfortable with?</p>
