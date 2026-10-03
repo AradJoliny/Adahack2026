@@ -1,9 +1,6 @@
 import numpy as np
 import pandas as pd
 
-# risk ratings
-
-df = pd.read_csv("credits.csv", sep="\t", thousands=",")
 
 # base failure rates 
 base = {"AAA": 0.01, "AA": 0.02, "A": 0.04, "BBB": 0.07,
@@ -31,7 +28,14 @@ def expected_deliery(fp, lf):
 def effective_price(p, m):
     return p / m
 
+# import credits dataframe
+df = pd.read_csv("credits.csv", sep="\t", thousands=",")
 
-# Expected delivery per tonne bought: mᵢ = 1 − qᵢ·Lᵢ
-# Effective price per expected tonne: eᵢ = pᵢ / mᵢ.
-exp_deli_per_tonne = 
+# Apply the equations column-wise, storing results as 
+df["base"] = base_failure(df["risk_rating"])
+df["q"] = failure_probability(df["base"], df["had_reversal"].eq("Yes"))
+df["L"] = loss_fraction(df["has_buffer_pool"].eq("Yes"))
+df["m"] = expected_deliery(df["q"], df["L"])
+df["effective_price"] = effective_price(df["price_usd_per_t"], df["m"])
+
+
