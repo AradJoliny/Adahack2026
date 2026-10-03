@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carbon Portfolio Viewer – Visualise your carbon credit allocation</title>
+  <meta name="description" content="Upload a carbon project CSV and explore your portfolio as an interactive pie chart sized by carbon saved, spend or region." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-orbs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" width="34" height="34" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+        <circle cx="16" cy="16" r="14" fill="url(#lg)" opacity=".18"/>
+        <path d="M16 16V2a14 14 0 0 1 12.1 7z" fill="url(#lg)"/>
+        <path d="M16 16 28.1 9A14 14 0 1 1 16 2z" fill="none" stroke="url(#lg)" stroke-width="2"/>
+      </svg>
+      <div>
+        <h1>Carbon Portfolio Viewer</h1>
+        <p>Explore where your tonnes and your money are going</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button id="btn-sample" class="btn btn-ghost" type="button">Load sample data</button>
+      <button id="btn-api-doc" class="btn btn-ghost" type="button" aria-expanded="false" aria-controls="api-panel">API</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="api-panel" class="card api-panel" hidden aria-label="API usage">
+      <h2>REST API</h2>
+      <p>Send CSV text (or pre-parsed rows) as JSON. Column names and order are detected automatically; override with <code>column_map</code> if needed.</p>
+      <pre><code>curl -X POST http://localhost:5001/api/portfolio \
+  -H "Content-Type: application/json" \
+  -d '{"csv": "Project Name,Region,Price per Tonne,Tonnes Chosen\nAlpha,Africa,12.5,1000"}'</code></pre>
+    </section>
+
+    <section class="card upload" id="upload-card" aria-label="Load data">
+      <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose or drop a CSV file">
+        <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        <strong>Drop a CSV here, or click to browse</strong>
+        <span>Sent to the API as JSON and parsed server-side</span>
+        <input id="file-input" type="file" accept=".csv,text/csv" hidden />
+      </div>
+      <details class="paste">
+        <summary>…or paste CSV text</summary>
+        <textarea id="paste-input" rows="5" placeholder="Project Name,Region,Price per Tonne,Tonnes Chosen&#10;…"></textarea>
+        <button id="btn-paste" class="btn" type="button">Visualise</button>
+      </details>
+    </section>
+
+    <div id="alert" class="alert" role="alert" hidden></div>
+
+    <section id="dashboard" hidden>
+      <div class="stats" id="stats"></div>
+
+      <div class="grid">
+        <article class="card chart-card" aria-label="Portfolio pie chart">
+          <div class="chart-head">
+            <h2>Portfolio breakdown</h2>
+            <fieldset class="options" id="size-options">
+              <legend class="sr-only">Size segments by</legend>
+              <label class="check"><input type="checkbox" name="metric" value="carbon" checked /><span class="box"></span><span>Carbon saved</span></label>
+              <label class="check"><input type="checkbox" name="metric" value="spend" /><span class="box"></span><span>Price spent</span></label>
+              <label class="check"><input type="checkbox" name="metric" value="region" /><span class="box"></span><span>Region</span></label>
+            </fieldset>
+          </div>
+
+          <div class="region-sub" id="region-sub" hidden>
+            <span>Region measured by</span>
+            <div class="segmented">
+              <button type="button" class="seg active" data-sub="carbon">Carbon</button>
+              <button type="button" class="seg" data-sub="spend">Spend</button>
+            </div>
+          </div>
+
+          <div class="chart-body">
+            <div class="canvas-wrap"><canvas id="pie" aria-label="Pie chart" role="img"></canvas></div>
+            <ul class="legend" id="legend"></ul>
+          </div>
+        </article>
+      </div>
+
+      <section class="card table-card" aria-label="Project data">
+        <div class="table-head">
+          <h2>Projects</h2>
+          <details class="mapping" id="mapping"><summary>Detected columns</summary><div id="mapping-body"></div></details>
+        </div>
+        <div class="table-scroll">
+          <table id="table"><thead></thead><tbody></tbody></table>
+        </div>
+      </section>
+    </section>
+
+    <section id="empty" class="empty">
+      <p>No data loaded yet. Upload a CSV or <a href="#" id="link-sample">try the sample portfolio</a>.</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
