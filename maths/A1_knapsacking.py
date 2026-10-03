@@ -1,21 +1,22 @@
-import os
-print(os.getcwd())
-print(os.listdir())
-
+#imports
 import pandas as pd
 from optimiser import df
 
 # Algorithm one -- buy the cheapest expected tonnes first until target is met
 def greedy_portfolio(df, target=100_000, budget=1_000_000):
-    ranked = df.sortvalues("effective_price")
+    ranked = df.sort_values("effective_price")
     remaining = target
     rows = []
 
+    # Loop through each row in df (cheapest first),
+    # calculate max expected (available tonnes * expected delivery),
+    # take what we still need and convert back to tonnes bought
     for _, r in ranked.iterrows():
         if remaining <= 0:
             break
         max_expected = r['m'] * r['available_tonnes']
         take = min(remaining, max_expected)
+        tonnes = take / r['m']
         rows.append({
             "credit_id": r["credit_id"],
             "project_name": r["project_name"],
@@ -25,7 +26,7 @@ def greedy_portfolio(df, target=100_000, budget=1_000_000):
         })
         remaining -= take
 
-    portfolio = pd.dataframe(rows)
+    portfolio = pd.DataFrame(rows)
     if remaining > 0:
         raise ValueError("Not enough supply to reach the target")
     if portfolio["cost"].sum() > budget:
@@ -38,4 +39,3 @@ if __name__ == "__main__":
     print(f"Total cost: ${port['cost'].sum():,.0f}")
     print(f"Tonnes bought: {port['tonnes_bought'].sum():,.0f}")
     print(f"Expected delivered: {port['expected_delivered'].sum():,.0f}")
-

@@ -64,3 +64,11 @@ country_shocks = np.random.standard_normal(df["country"].nunique())
 f_country = country_shocks[df["country_id"].values]
 print("Country shock for first 5 projects:")
 print(f_country[:5])
+
+# ----------------------------------------------------------------------------------------------------------------
+
+# Assemble Scenario & Evaluate Survival
+
+# Draw project's own private noise
+epsilon = np.random.standard_normal(len(df))
+
